@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}LoLStalk - Follow match histories of pro players and friends{% endblock %}
+
+{% block content %}
+
+<div class="mt-3 pb-2 container bg-white">
+
+    <!-- Left container -->
+    <div class="row pt-5 pb-5">
+        <div class="col-md-6 bg-white rounded">
+            <div class="container d-flex h-100 ">
+
+                <div class="container row  align-self-center ">
+                    <h1>LoLStalk</h1>
+                    <h3>
+                        Check the latest matches of your favorite League of Legends players, <b class="text-primary">all in one timeline</b>.
+
+                    </h3>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Right container (sign up) -->
+        <div class="col-md-6 pt-5 pb-5 border-left bg-white ">
+            <div class="container">
+                <h3>Sign Up for Free</h3>
+
+                <!--  Sign up with Google -->
+                <div class="pt-3">
+                    <a class="no-underline" href="{% url 'social:begin' 'google-oauth2' %}">
+                        <button type="button" class="btn btn-light btn-block border">
+                            <img class="pr-5" src="{% static 'images/new-google-favicon-512.png' %}" height="25px"/>
+                            <b class="text-dark pr-5">Enter with Google</b>
+                        </button>
+                    </a>
+                </div>
+
+                <!-- Sign up with Facebook -->
+                <div class="pt-3">
+                    <a class="no-underline" href="{% url 'social:begin' 'facebook' %}">
+                        <button type="button" class="btn btn-light btn-block border">
+                            <img class="pr-5" src="{% static 'images/facebook.png' %}" height="25px"/>
+                            <b class="text-dark pr-5">Enter with Facebook</b>
+                        </button>
+                    </a>
+                </div>
+
+                <div class="pt-4">
+                    <p class="text-center font-weight-bold">----- CREATE AN ACCOUNT -----</p>
+                </div>
+
+                <!-- Sign up form -->
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Show form validation errors -->
+                    {% for field in form %}
+                    {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                    {% endfor %}
+                    {% endfor%}
+
+
+                    <!-- Username field -->
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="username" placeholder="Username"
+                               value="{{ form.username.value|default_if_none:'' }}" required/>
+                    </div>
+
+                    <!-- Email field -->
+                    <div class="form-group">
+                        <input class="form-control" type="email" name="email" placeholder="Email"
+                               value="{{ form.email.value|default_if_none:'' }}" required/>
+                    </div>
+
+                    <!-- Password field -->
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password1" placeholder="Password" required/>
+                    </div>
+
+                    <!-- Password 2 field -->
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password2" placeholder="Confirm password" required/>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary font-weight-bold float-left">Sign up</button>
+
+                    <span class="float-right">Already have an account? <a class="text-primary" href="{% url 'login' %}">Sign in</a></span>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
