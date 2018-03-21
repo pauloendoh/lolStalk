@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}LoLStalk - Follow match histories of pro players and friends{% endblock %}
+
+{% block content %}
+
+<div class="container bg-white mt-3">
+    <h3>{{ region }}</h3>
+    <h5>{{ summoner }}</h5>
+
+
+
+    {% for participant in matches.participants %}
+    {% ifequal participant.participantId 2 %}
+    {{ participant.stats.kills }}/{{ participant.stats.deaths }}/{{ participant.stats.assists }}
+    {% endifequal %}
+    {% endfor %}
+</div>
+
+{% endblock %}

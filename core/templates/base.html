@@ -26,6 +26,9 @@
     <!-- My custom css -->
     <link href="{% static 'styles/main.css' %}" rel="stylesheet">
 
+    <!--Google Icons-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
 </head>
 
 <body class="bg-light">
@@ -33,11 +36,22 @@
 <nav class="navbar navbar-expand-sm bg-white navbar-light">
     <div class="container">
         <ul class="navbar-nav mr-auto">
+
+            <!-- Brand -->
             <li class="nav-item">
-                <a class="nav-link" href="">{{ user.username }}</a>
+                <a class="navbar-brand font-weight-bold" href="{% url 'home' %}">LoLStalk</a>
             </li>
+
+            <!-- Search box -->
             <li class="nav-item">
-                <a class="nav-link" href="">Second item</a>
+                <form class="form-inline" method="get" action="{% url 'search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="nickname" placeholder="Search summoner" {% if request.GET.nickname %}value="{{ request.GET.nickname }}"{% endif %}/>
+                        <div class="input-group-append">
+                            <button class="form-control"><i class="material-icons align-middle">search</i></button>
+                        </div>
+                    </div>
+                </form>
             </li>
         </ul>
 
