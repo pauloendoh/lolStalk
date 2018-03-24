@@ -5,22 +5,40 @@
 
 {% block content %}
 
-<div class="container bg-white mt-3">
-    {% for summoner in summoners %}
-    <p>Account ID: {{ summoner.accountId }}</p>
-    <p>Region: {{ summoner.region }}</p>
+<script src="{% static 'js/search.js' %}"></script>
 
+<div class="container  mt-3">
 
-    {% ifequal summoner.region  'BR1' %}    <a target="_blank" href="http://br.op.gg/summoner/userName={{ summoner.name }}">Check OP.GG</a>
-{% endifequal %}
-    {% ifequal summoner.region  'NA1' %}    <a target="_blank" href="http://na.op.gg/summoner/userName={{ summoner.name }}">Check OP.GG</a>
-{% endifequal %}
+    <h3 class="pt-2 pb-1">Results for '{{ request.GET.nickname }}':</h3>
 
-    <br>
-    <a href="{% url 'summoner' summoner.region summoner.name %}">Check summoner</a>
+    <div class="card-group">
+        {% for summoner in summoners %}
 
-    <hr>
-    {% endfor %}
+        <div class="card search-card ">
+            <div class="card-body">
+                <h5 class="card-title">{{ summoner.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {% ifequal summoner.region 'br1' %}
+                    Brazil
+                    {% endifequal %}
+                    {% ifequal summoner.region 'na1' %}
+                    North America
+                    {% endifequal %}
+                    {% ifequal summoner.region 'kr' %}
+                    South Korea
+                    {% endifequal %}
+                    {% ifequal summoner.region 'euw1' %}
+                    European West
+                    {% endifequal %}
+                </h6>
+                <p class="card-text">Level: {{ summoner.summonerLevel }}</p>
+                <a href="{% url 'summoner' summoner.region summoner.name %}" class="btn btn-primary">Match history</a>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+
 </div>
 
 {% endblock %}

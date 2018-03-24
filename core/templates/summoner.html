@@ -5,17 +5,17 @@
 
 {% block content %}
 
+
 <div class="container bg-white mt-3">
-    <h3>{{ region }}</h3>
-    <h5>{{ summoner }}</h5>
+    <h3 class="pt-2 pb-1">{{ summoner.name }}
+        <small>(Challenger 1000LP - {{ summoner.region }})</small>
+    </h3>
 
-
-
-    {% for participant in matches.participants %}
-    {% ifequal participant.participantId 2 %}
-    {{ participant.stats.kills }}/{{ participant.stats.deaths }}/{{ participant.stats.assists }}
-    {% endifequal %}
+    {% for match in recent_matches %}
+    <p>Game ID: {{ match.gameId|floatformat }}</p>
     {% endfor %}
+
+
 </div>
 
 {% endblock %}
