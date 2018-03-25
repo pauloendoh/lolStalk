@@ -1,3 +1,5 @@
+import datetime
+
 import requests
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.forms import UserCreationForm
@@ -6,7 +8,7 @@ from django.shortcuts import render, redirect
 from core.forms import SignUpForm
 from core.models import Summoner, Match, Summoner_Match
 
-api_key = "RGAPI-d73fefa8-b18c-4044-ae0a-e53d985576db"
+api_key = "RGAPI-f6567211-04e0-485e-9bd2-02b1b267fc3a"
 
 
 def home(request):
@@ -141,6 +143,9 @@ def summoner(request, region, nickname):
         "https://" + region + ".api.riotgames.com/lol/match/v3/matchlists/by-account/" + str(summoner.accountId) + "/recent?api_key=" + api_key)
     jsonresponse = response.json()
     recent_matches = []
+
+
+
     for match in jsonresponse["matches"]:
         gameId = match["gameId"]
         try:
@@ -151,7 +156,29 @@ def summoner(request, region, nickname):
             championId = match["champion"]
             timestamp = match["timestamp"]
             role = match["role"]
-            summoner_match = Summoner_Match.objects.create(summoner_accountId=summoner.accountId, gameId=gameId, participantId=0, championId=championId, timestamp=timestamp, win=False, role=role, lane=lane, kills=0, deaths=0, assists=0)
+
+            participantId = 0
+            summoner_name = ""
+            win=False
+            kills = 0
+            deaths = 0
+            assists =0
+
+            match_details = requests.get("https://" + region + ".api.riotgames.com/lol/match/v3/matches/" + str(gameId) + "?api_key=" + api_key).json()
+            for participantIdentity in match_details["participantIdentities"]:
+                if participantIdentity["player"]["summonerName"].lower() == summoner.name.lower():
+                    participantId = participantIdentity["participantId"]
+                    summoner_name = participantIdentity["player"]["summonerName"]
+
+            # Save win/lose and KDA
+            for participant in match_details["participants"]:
+                if participantId == participant["participantId"]:
+                    win = participant["stats"]["win"]
+                    kills = participant["stats"]["kills"]
+                    deaths = participant["stats"]["deaths"]
+                    assists = participant["stats"]["assists"]
+
+            summoner_match = Summoner_Match.objects.create(summoner_accountId=summoner.accountId, summoner_name=summoner_name, gameId=gameId, participantId=participantId, championId=championId, timestamp=timestamp, win=win, role=role, lane=lane, kills=kills, deaths=deaths, assists=assists)
             recent_matches.append(summoner_match)
 
     return render(request, 'summoner.html', {"summoner": summoner, "recent_matches": recent_matches, })

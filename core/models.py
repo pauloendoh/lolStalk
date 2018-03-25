@@ -13,6 +13,7 @@ class Summoner(models.Model):
 
 class Summoner_Match(models.Model):
     summoner_accountId = models.IntegerField()
+    summoner_name = models.CharField(max_length=18)
     gameId = models.FloatField()
     participantId = models.IntegerField()
     timestamp = models.FloatField()

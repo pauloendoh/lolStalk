@@ -7,14 +7,25 @@
 
 
 <div class="container bg-white mt-3">
-    <h3 class="pt-2 pb-1">{{ summoner.name }}
-        <small>(Challenger 1000LP - {{ summoner.region }})</small>
-    </h3>
 
-    {% for match in recent_matches %}
-    <p>Game ID: {{ match.gameId|floatformat }}</p>
-    {% endfor %}
+    <h3 class="pt-2 pb-1">{{ summoner.name }} ({{summoner.region|upper}})</h3>
 
+    <btn class="mt-1 mb-4 btn btn-primary">Follow</btn>
+
+    <div class="container mb-5">
+        {% for match in recent_matches %}
+
+        <div class="card mb-2 {% ifequal match.win 0 %}bg-danger{% else %}bg-success{% endifequal %}">
+            <div class="card-body">
+                <h5 class="card-title">{{ summoner.name }} ({{summoner.region|upper}})</h5>
+                <h6 class="card-subtitle mb-2">{{ match.timestamp|date}}</h6>
+                <p class="card-text">Champion ID: {{ match.championId }}</p>
+                <p class="card-text">KDA: {{ match.kills }} / {{ match.deaths }} / {{ match.assists }} </p>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
 
 </div>
 
