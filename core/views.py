@@ -13,6 +13,7 @@ api_key = "RGAPI-f6567211-04e0-485e-9bd2-02b1b267fc3a"
 
 
 def home(request):
+
     if not (request.user.is_authenticated):
         if request.method == 'POST':
             form = SignUpForm(request.POST)
@@ -28,16 +29,18 @@ def home(request):
             form = UserCreationForm()
         return render(request, 'signup.html', {'form': form})
 
-    summoner = {}
-    if 'nickname' in request.GET:
-        nickname = request.GET['nickname']
-        region = request.GET['region']
-        response = requests.get(
-            'https://' + region + '.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + nickname + '?api_key=' + api_key)
-        summoner = response.json()
-        summoner_id = summoner['id']
+    # Timeline
+    timeline = []
+    user = request.user
+    following_list = Following.objects.filter(user=user)
+    for following in following_list:
+        account_id = following.summoner.accountId
+        summoner_match_list = Summoner_Match.objects.filter(summoner_accountId=account_id)
+        for summoner_match in summoner_match_list:
+            timeline.append(summoner_match)
+        timeline.sort(key=lambda object1: object1.timestamp, reverse=True)
 
-    return render(request, 'home.html', {"summoner": summoner})
+    return render(request, 'home.html', {"timeline": timeline} )
 
 
 def login(request):

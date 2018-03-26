@@ -29,7 +29,7 @@
     <div class="container mb-5">
         {% for match in recent_matches %}
 
-        <div class="card mb-2 {% ifequal match.win 0 %}bg-danger{% else %}bg-success{% endifequal %}">
+        <div class="card mb-2 {% ifequal match.win False %}bg-danger{% else %}bg-success{% endifequal %}">
             <div class="card-body">
                 <h5 class="card-title">{{ summoner.name }} ({{summoner.region|upper}})</h5>
                 <h6 class="card-subtitle mb-2">{{ match.timestamp|date}}</h6>

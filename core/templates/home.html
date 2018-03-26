@@ -8,6 +8,23 @@
 <div class="container bg-white mt-3">
     <h3 class="pt-3">LoLStalk</h3>
 
+    <!--Summoners match history-->
+    <div class="container mb-5">
+        {% for match in timeline %}
+
+        <div class="card mb-2 {% ifequal match.win 0 %}bg-danger{% else %}bg-success{% endifequal %}">
+            <div class="card-body">
+                <h5 class="card-title">{{ match.summoner_name }} </h5>
+                <h6 class="card-subtitle mb-2">{{ match.timestamp|date}}</h6>
+                <p class="card-text">Champion: {{ match.championName }}</p>
+                <p class="card-text">KDA: {{ match.kills }} / {{ match.deaths }} / {{ match.assists }} </p>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+
 </div>
+
 
 {% endblock %}
