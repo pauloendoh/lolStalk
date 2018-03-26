@@ -10,8 +10,22 @@
 
     <h3 class="pt-2 pb-1">{{ summoner.name }} ({{summoner.region|upper}})</h3>
 
-    <btn class="mt-1 mb-4 btn btn-primary">Follow</btn>
-
+    <!--Follow button-->
+    {% if request.user.is_authenticated %}
+    {% if not following %}
+    <a class="no-underline" href="{% url 'follow' summoner.summonerId %}">
+        <btn class="mt-1 mb-4 btn btn-primary">Follow</btn>
+    </a>
+    {% else %}
+    <a class="no-underline" href="{% url 'follow' summoner.summonerId %}">
+        <btn class="mt-1 mb-4 btn btn-primary">Unfollow</btn>
+    </a>
+    {% endif  %}
+    {% else %}
+    <a class="no-underline" href="{% url 'login' %}">
+        <btn class="mt-1 mb-4 btn btn-primary">Sign in to follow this player</btn>
+    </a>
+    {% endif %}
     <div class="container mb-5">
         {% for match in recent_matches %}
 
@@ -19,7 +33,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ summoner.name }} ({{summoner.region|upper}})</h5>
                 <h6 class="card-subtitle mb-2">{{ match.timestamp|date}}</h6>
-                <p class="card-text">Champion ID: {{ match.championId }}</p>
+                <p class="card-text">Champion: {{ match.championName }}</p>
                 <p class="card-text">KDA: {{ match.kills }} / {{ match.deaths }} / {{ match.assists }} </p>
             </div>
         </div>

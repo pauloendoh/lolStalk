@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -18,6 +19,7 @@ class Summoner_Match(models.Model):
     participantId = models.IntegerField()
     timestamp = models.FloatField()
     championId = models.IntegerField()
+    championName = models.CharField(max_length=25)
     win = models.BooleanField()
     role = models.CharField(max_length=25)
     lane = models.CharField(max_length=25)
@@ -30,3 +32,13 @@ class Match(models.Model):
     gameId = models.FloatField()
     gameCreation = models.FloatField()
     gameDuration = models.FloatField()
+
+class Champion(models.Model):
+    championId = models.CharField(max_length=10)
+    name = models.CharField(max_length=25)
+    locale = models.CharField(max_length=10)
+    version = models.CharField(max_length=25)
+
+class Following(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    summoner = models.ForeignKey(Summoner, on_delete=models.CASCADE)

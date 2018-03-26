@@ -9,4 +9,6 @@ urlpatterns = [
     path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
     path('search', views.search, name='search' ),
     path('summoner/<str:region>/<str:nickname>', views.summoner, name='summoner' ),
+    path('champions', views.champions, name='champions'),
+    path('follow/<int:summoner_id>', views.follow, name="follow")
 ]
