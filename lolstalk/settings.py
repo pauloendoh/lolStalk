@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'social_django'
+    'social_django',
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [
@@ -138,6 +139,5 @@ LOGIN_REDIRECT_URL = 'home'
 SOCIAL_AUTH_FACEBOOK_KEY = '2176843249209917'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = 'c35bcb89492c1e34d2a8ab41793812e1'  # App Secret
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='824762727507-83avgns48ek57fnmus2r7se696aj1m33.apps.googleusercontent.com'  #Paste CLient Key
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'ToGW1bsWlJej4Ohvo_cCvcaD' #Paste Secret Key
-
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '824762727507-83avgns48ek57fnmus2r7se696aj1m33.apps.googleusercontent.com'  # Paste CLient Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'ToGW1bsWlJej4Ohvo_cCvcaD'  # Paste Secret Key

@@ -1,4 +1,5 @@
 import datetime
+import time
 
 import requests
 from django.contrib.auth import authenticate, login as auth_login
@@ -9,7 +10,7 @@ from django.shortcuts import render, redirect
 from core.forms import SignUpForm
 from core.models import Summoner, Match, Summoner_Match, Champion, Following
 
-api_key = "RGAPI-f6567211-04e0-485e-9bd2-02b1b267fc3a"
+api_key = "RGAPI-1d1311dc-9042-4f2f-9017-a7953dd6371b"
 
 
 def home(request):
@@ -37,6 +38,11 @@ def home(request):
         account_id = following.summoner.accountId
         summoner_match_list = Summoner_Match.objects.filter(summoner_accountId=account_id)
         for summoner_match in summoner_match_list:
+
+            summoner_match.timestamp = datetime.datetime.fromtimestamp(summoner_match.timestamp / 1e3)
+
+
+
             timeline.append(summoner_match)
         timeline.sort(key=lambda object1: object1.timestamp, reverse=True)
 
