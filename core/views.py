@@ -253,6 +253,15 @@ def follow(request, summoner_id):
     return redirect('home')
 
 
+@login_required
+def following(request):
+
+    user = request.user
+    following_list = Following.objects.filter(user=user)
+
+    return render(request, 'following.html', {"following_list": following_list})
+
+
 def update_leagues(region, summoner_id):
     success = False
 
@@ -280,4 +289,3 @@ def update_leagues(region, summoner_id):
             league.save()
 
     return success
-

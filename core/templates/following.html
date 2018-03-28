@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load humanize %}
+
+
+{% block title %}LoLStalk - Follow match histories of pro players and friends{% endblock %}
+
+{% block content %}
+
+<div class="container bg-white mt-3">
+
+    <!--Summoners match history-->
+    <div class="container mb-5">
+        <h3>Following {{ following_list.count }} summoner{{ following_list|length|pluralize }}</h3>
+        <ul>
+
+            {% for following in following_list %}
+            <li><a href="{% url 'summoner' following.summoner.region following.summoner.name %}">{{ following.summoner.name }}</a></li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

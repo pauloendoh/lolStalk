@@ -10,5 +10,7 @@ urlpatterns = [
     path('search', views.search, name='search' ),
     path('summoner/<str:region>/<str:nickname>', views.summoner, name='summoner' ),
     path('champions', views.champions, name='champions'),
-    path('follow/<int:summoner_id>', views.follow, name="follow")
+    path('follow/<int:summoner_id>', views.follow, name="follow"),
+    path('following', views.following, name='following'),
+
 ]
