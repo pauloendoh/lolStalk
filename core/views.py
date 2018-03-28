@@ -8,13 +8,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 
 from core.forms import SignUpForm
-from core.models import Summoner, Match, Summoner_Match, Champion, Following
+from core.models import Summoner, Match, Summoner_Match, Champion, Following, League
 
-api_key = "RGAPI-1d1311dc-9042-4f2f-9017-a7953dd6371b"
+api_key = "RGAPI-af8b7797-eabf-450f-926b-8eb542c9027b"
 
 
 def home(request):
-
     if not (request.user.is_authenticated):
         if request.method == 'POST':
             form = SignUpForm(request.POST)
@@ -38,15 +37,12 @@ def home(request):
         account_id = following.summoner.accountId
         summoner_match_list = Summoner_Match.objects.filter(summoner_accountId=account_id)
         for summoner_match in summoner_match_list:
-
             summoner_match.timestamp = datetime.datetime.fromtimestamp(summoner_match.timestamp / 1e3)
-
-
 
             timeline.append(summoner_match)
         timeline.sort(key=lambda object1: object1.timestamp, reverse=True)
 
-    return render(request, 'home.html', {"timeline": timeline} )
+    return render(request, 'home.html', {"timeline": timeline})
 
 
 def login(request):
@@ -208,15 +204,19 @@ def summoner(request, region, nickname):
                                                            kills=kills, deaths=deaths, assists=assists)
             recent_matches.append(summoner_match)
 
-
     # Check if user is following the summoner
     following = False
     if request.user.is_authenticated:
         user = request.user
-        if Following.objects.filter(user=user, summoner=summoner).count()>0:
-            following=True
+        if Following.objects.filter(user=user, summoner=summoner).count() > 0:
+            following = True
 
-    return render(request, 'summoner.html', {"summoner": summoner, "recent_matches": recent_matches, "following": following })
+    # Update and summoner's league
+    update_leagues(region, summoner.summonerId)
+    summoner.leagues = League.objects.filter(summoner=summoner)
+
+    return render(request, 'summoner.html',
+                  {"summoner": summoner, "recent_matches": recent_matches, "following": following})
 
 
 def champions(request):
@@ -239,9 +239,9 @@ def champions(request):
 
     return redirect('home')
 
+
 @login_required
 def follow(request, summoner_id):
-
     user = request.user
     summoner = Summoner.objects.get(summonerId=summoner_id)
 
@@ -250,5 +250,34 @@ def follow(request, summoner_id):
     else:
         Following.objects.create(user=user, summoner=summoner)
 
-
     return redirect('home')
+
+
+def update_leagues(region, summoner_id):
+    success = False
+
+    jsonresponse = requests.get("https://" + region + ".api.riotgames.com/lol/league/v3/positions/by-summoner/" + str(
+        summoner_id) + "?api_key=" + api_key).json()
+    if not "status" in jsonresponse:
+        for league_data in jsonresponse:
+            league = League()
+            summoner = ""
+            try:
+                league.summoner = Summoner.objects.get(summonerId=summoner_id)
+            except:
+                print("get_league: summoner doesn't exist!")
+                return redirect('home')
+            league.queueType = league_data["queueType"]
+            league.tier = league_data["tier"]
+            league.rank = league_data["rank"]
+            league.leaguePoints = league_data["leaguePoints"]
+            league.wins = int(league_data["wins"])
+            league.losses = int(league_data["losses"])
+            league.miniSeries = ""
+
+            League.objects.filter(summoner=league.summoner, queueType=league.queueType).delete()
+
+            league.save()
+
+    return success
+

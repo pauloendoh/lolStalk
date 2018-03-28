@@ -10,6 +10,12 @@
 
     <h3 class="pt-2 pb-1">{{ summoner.name }} ({{summoner.region|upper}})</h3>
 
+    <!-- League information -->
+    {% for league in summoner.leagues %}
+    <h5>{{ league.queueType }}: {{ league.tier }} {{ league.rank }}</h5>
+    {% endfor %}
+
+
     <!--Follow button-->
     {% if request.user.is_authenticated %}
     {% if not following %}
@@ -20,12 +26,14 @@
     <a class="no-underline" href="{% url 'follow' summoner.summonerId %}">
         <btn class="mt-1 mb-4 btn btn-primary">Unfollow</btn>
     </a>
-    {% endif  %}
+    {% endif %}
     {% else %}
     <a class="no-underline" href="{% url 'login' %}">
         <btn class="mt-1 mb-4 btn btn-primary">Sign in to follow this player</btn>
     </a>
     {% endif %}
+
+
     <div class="container mb-5">
         {% for match in recent_matches %}
 

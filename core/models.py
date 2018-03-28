@@ -42,3 +42,14 @@ class Champion(models.Model):
 class Following(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     summoner = models.ForeignKey(Summoner, on_delete=models.CASCADE)
+
+class League(models.Model):
+    summoner = models.ForeignKey(Summoner, on_delete=models.CASCADE)
+
+    queueType = models.TextField()
+    tier = models.TextField()
+    rank = models.TextField()
+    leaguePoints = models.IntegerField()
+    wins = models.IntegerField
+    losses = models.IntegerField
+    miniSeries = models.TextField()
