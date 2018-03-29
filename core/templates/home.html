@@ -15,11 +15,12 @@
 
         <div class="card mb-2 {% ifequal match.win 0 %}bg-danger{% else %}bg-success{% endifequal %}">
             <div class="card-body">
-                <h5 class="card-title"><b><a href="{% url 'summoner' 'br1' match.summoner_name %}">{{match.summoner_name}}</a></b></h5>
+                <h5 class="card-title"><b><a href="{% url 'summoner' 'br1' match.summoner_name %}">{{match.summoner_name}}</a></b>
+                </h5>
                 <h6 class="card-subtitle mb-2">{{ match.timestamp|date}}</h6>
                 <p class="card-text">Champion: {{ match.championName }}</p>
-                <p class="card-text">KDA: {{ match.kills }} / {{ match.deaths }} / {{ match.assists }} </p>
-                <p class="card-text">{{ match.timestamp|naturaltime|capfirst }} </p>
+                <p class="card-text">KDA: {{match.kills}} / {{match.deaths}} / {{ match.assists }} </p>
+                <p class="card-text">{{match.timestamp|naturaltime|capfirst}} </p>
             </div>
         </div>
 

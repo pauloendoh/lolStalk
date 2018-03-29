@@ -1,5 +1,4 @@
 import datetime
-import time
 
 import requests
 from django.contrib.auth import authenticate, login as auth_login
@@ -8,13 +7,14 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 
 from core.forms import SignUpForm
+from core.functions import get_summoner, get_leagues
 from core.models import Summoner, Match, Summoner_Match, Champion, Following, League
 
-api_key = "RGAPI-af8b7797-eabf-450f-926b-8eb542c9027b"
+api_key = "RGAPI-16db827d-ecff-42af-9ae7-111b9c5482ed"
 
 
 def home(request):
-    if not (request.user.is_authenticated):
+    if not request.user.is_authenticated:
         if request.method == 'POST':
             form = SignUpForm(request.POST)
             if form.is_valid():
@@ -75,10 +75,9 @@ def search(request):
                 name = summoner["name"]
                 profileIconId = summoner["profileIconId"]
                 summonerLevel = summoner["summonerLevel"]
-                revisionDate = summoner["revisionDate"]
                 new_summoner = Summoner.objects.create(region="na1", accountId=accountId, summonerId=summonerId,
                                                        name=name, profileIconId=profileIconId,
-                                                       summonerLevel=summonerLevel, revisionDate=revisionDate)
+                                                       summonerLevel=summonerLevel, leagues_updated_at=datetime.now())
                 summoners.append(new_summoner)
 
         if 'br1' not in found_regions:
@@ -133,26 +132,14 @@ def search(request):
 
 
 def summoner(request, region, nickname):
-    # Getting the summoner (and saving it in database)
-    summoner = ""
-    try:
-        summoner = Summoner.objects.get(name__iexact=nickname, region__iexact=region)
-    except:
-        response = requests.get(
-            'https://' + region + '.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + nickname + '?api_key=' + api_key)
-        jsonresponse = response.json()
-        if 'accountId' in jsonresponse:
-            accountId = jsonresponse["accountId"]
-            summonerId = jsonresponse["id"]
-            name = jsonresponse["name"]
-            profileIconId = jsonresponse["profileIconId"]
-            summonerLevel = jsonresponse["summonerLevel"]
-            revisionDate = jsonresponse["revisionDate"]
-            summoner = Summoner.objects.create(region=region, accountId=accountId, name=name,
-                                               profileIconId=profileIconId, summonerLevel=summonerLevel,
-                                               revisionDate=revisionDate, summonerId=summonerId)
-        else:  # If the summoner name doesn't exist in the region
-            return redirect('home')
+    summoner = get_summoner(region, nickname)
+
+    # If summoner wasn' found, returns to the home page
+    # (later I will create a customized error)
+    if summoner == None:
+        return redirect("home")
+
+    summoner.leagues = get_leagues(summoner)
 
     response = requests.get(
         "https://" + region + ".api.riotgames.com/lol/match/v3/matchlists/by-account/" + str(
@@ -211,10 +198,6 @@ def summoner(request, region, nickname):
         if Following.objects.filter(user=user, summoner=summoner).count() > 0:
             following = True
 
-    # Update and summoner's league
-    update_leagues(region, summoner.summonerId)
-    summoner.leagues = League.objects.filter(summoner=summoner)
-
     return render(request, 'summoner.html',
                   {"summoner": summoner, "recent_matches": recent_matches, "following": following})
 
@@ -262,30 +245,3 @@ def following(request):
     return render(request, 'following.html', {"following_list": following_list})
 
 
-def update_leagues(region, summoner_id):
-    success = False
-
-    jsonresponse = requests.get("https://" + region + ".api.riotgames.com/lol/league/v3/positions/by-summoner/" + str(
-        summoner_id) + "?api_key=" + api_key).json()
-    if not "status" in jsonresponse:
-        for league_data in jsonresponse:
-            league = League()
-            summoner = ""
-            try:
-                league.summoner = Summoner.objects.get(summonerId=summoner_id)
-            except:
-                print("get_league: summoner doesn't exist!")
-                return redirect('home')
-            league.queueType = league_data["queueType"]
-            league.tier = league_data["tier"]
-            league.rank = league_data["rank"]
-            league.leaguePoints = league_data["leaguePoints"]
-            league.wins = int(league_data["wins"])
-            league.losses = int(league_data["losses"])
-            league.miniSeries = ""
-
-            League.objects.filter(summoner=league.summoner, queueType=league.queueType).delete()
-
-            league.save()
-
-    return success

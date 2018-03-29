@@ -13,12 +13,11 @@
     <div class="container mb-5">
         <h3>Following {{ following_list.count }} summoner{{ following_list|length|pluralize }}</h3>
         <ul>
-
             {% for following in following_list %}
-            <li><a href="{% url 'summoner' following.summoner.region following.summoner.name %}">{{ following.summoner.name }}</a></li>
+            <li><a href="{% url 'summoner' following.summoner.region following.summoner.name %}">{{following.summoner.name}}</a>
+            </li>
             {% endfor %}
         </ul>
-
     </div>
 
 </div>

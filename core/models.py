@@ -10,6 +10,7 @@ class Summoner(models.Model):
     profileIconId = models.IntegerField()
     revisionDate = models.FloatField()
     summonerLevel = models.IntegerField()
+    leagues_updated_at = models.DateTimeField()
 
 
 class Summoner_Match(models.Model):

@@ -44,6 +44,31 @@
 
             <!-- Search box -->
             <li class="nav-item">
+                <form method="get" action="{% url 'search' %}">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+
+                        </div>
+                        <select class="custom-select " id="region">
+                            <option value="" selected>All</option>
+                            <option value="kr">KR</option>
+                            <option value="na1">NA</option>
+                            <option value="euw1">EUW</option>
+                            <option value="br1">BR</option>
+                        </select>
+                        <input class="form-control" type="text" class="form-control" name="nickname"
+                               placeholder="Search summoner" {% if request.GET.nickname %}value="{{ request.GET.nickname }}" {% endif %}/>
+
+                        <div class="input-group-append ">
+
+                            <button class="btn btn-outline-secondary " type="submit"><i
+                                    class="material-icons align-middle">search</i></button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+            <!-- Safe copy of the old search box
+            <li class="nav-item">
                 <form class="form-inline" method="get" action="{% url 'search' %}">
                     <div class="input-group">
                         <input type="text" class="form-control" name="nickname" placeholder="Search summoner" {% if request.GET.nickname %}value="{{ request.GET.nickname }}" {% endif %}/>
@@ -52,7 +77,7 @@
                         </div>
                     </div>
                 </form>
-            </li>
+            </li>-->
 
             <!-- Following (summoners) list -->
             {% if request.user.is_authenticated %}
