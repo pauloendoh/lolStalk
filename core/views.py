@@ -53,10 +53,16 @@ def search(request):
         return redirect(expired_api_key)
 
     summoners = []
-    if 'nickname' in request.GET:
+    if 'nickname' and 'region' in request.GET:
+        region = request.GET['region']
         nickname = request.GET['nickname']
 
+        if not region == '':
+            return redirect('summoner/' + region + "/" + nickname)
+
         found_summoners = Summoner.objects.filter(name__iexact=nickname)
+
+
 
         region_list = ["na1", "br1", "kr", "ru", "oc1", "jp1", "eun1", "euw1", "tr1", "la1", "la2"]
 
@@ -68,7 +74,8 @@ def search(request):
         for region in region_list:
             if region not in found_regions:
                 summoner = get_summoner(region, nickname)
-                summoners.append(summoner)
+                if not summoner == None:
+                    summoners.append(summoner)
 
     return render(request, 'search.html', {"summoners": summoners})
 
