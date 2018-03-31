@@ -18,7 +18,7 @@ class Summoner_Match(models.Model):
     summoner_name = models.CharField(max_length=18)
     gameId = models.FloatField()
     participantId = models.IntegerField()
-    timestamp = models.FloatField()
+    timestamp = models.DateTimeField()
     championId = models.IntegerField()
     championName = models.CharField(max_length=25)
     win = models.BooleanField()

@@ -12,13 +12,17 @@
 
     <!-- League information -->
     {% for league in summoner.leagues %}
-    <h5>{{ league.queueType }}: {{ league.tier }} {{ league.rank }}</h5>
+    <h5>{{ league.queueType }}: {{ league.tier }} {{ league.rank }} - {{ league.leaguePoints }} LP
+        {% ifnotequal league.miniSeries '' %}
+            ({{league.miniSeries}})
+        {% endifnotequal %}
+    </h5>
     {% endfor %}
 
 
     <!--Follow button-->
     {% if request.user.is_authenticated %}
-    {% if not following %}
+    {% if not is_following %}
     <a class="no-underline" href="{% url 'follow' summoner.summonerId %}">
         <btn class="mt-1 mb-4 btn btn-primary">Follow</btn>
     </a>
@@ -36,16 +40,7 @@
 
     <div class="container mb-5">
         {% for match in recent_matches %}
-
-        <div class="card mb-2 {% ifequal match.win False %}bg-danger{% else %}bg-success{% endifequal %}">
-            <div class="card-body">
-                <h5 class="card-title">{{ summoner.name }} ({{summoner.region|upper}})</h5>
-                <h6 class="card-subtitle mb-2">{{ match.timestamp|date}}</h6>
-                <p class="card-text">Champion: {{ match.championName }}</p>
-                <p class="card-text">KDA: {{ match.kills }} / {{ match.deaths }} / {{ match.assists }} </p>
-            </div>
-        </div>
-
+                {% include "match_card.html" %}
         {% endfor %}
     </div>
 

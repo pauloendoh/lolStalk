@@ -7,17 +7,20 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 
 from core.forms import SignUpForm
-from core.functions import get_summoner, get_leagues
+from core.functions import get_summoner, get_leagues, get_recent_matches, user_is_following, api_key_is_updated, \
+    get_latest_static_data_version, get_timeline
 from core.models import Summoner, Match, Summoner_Match, Champion, Following, League
-
-api_key = "RGAPI-16db827d-ecff-42af-9ae7-111b9c5482ed"
 
 
 def home(request):
     if not request.user.is_authenticated:
+
+        # If a sign up form was submitted
         if request.method == 'POST':
             form = SignUpForm(request.POST)
             if form.is_valid():
+
+                # Create a new user, then sign in automatically
                 form.save()
                 username = form.cleaned_data.get('username')
                 raw_password = form.cleaned_data.get('password1')
@@ -25,22 +28,16 @@ def home(request):
                 user = authenticate(username=username, email=email, password=raw_password)
                 auth_login(request, user)
                 return redirect('home')
+
+        # Only show the landing page with the
+        # sign up form
         else:
             form = UserCreationForm()
         return render(request, 'signup.html', {'form': form})
 
-    # Timeline
-    timeline = []
-    user = request.user
-    following_list = Following.objects.filter(user=user)
-    for following in following_list:
-        account_id = following.summoner.accountId
-        summoner_match_list = Summoner_Match.objects.filter(summoner_accountId=account_id)
-        for summoner_match in summoner_match_list:
-            summoner_match.timestamp = datetime.datetime.fromtimestamp(summoner_match.timestamp / 1e3)
-
-            timeline.append(summoner_match)
-        timeline.sort(key=lambda object1: object1.timestamp, reverse=True)
+    # If user is authenticated
+    # get their timeline/feed  
+    timeline = get_timeline(request.user)
 
     return render(request, 'home.html', {"timeline": timeline})
 
@@ -52,167 +49,63 @@ def login(request):
 
 
 def search(request):
+    if not api_key_is_updated():
+        return redirect(expired_api_key)
+
     summoners = []
     if 'nickname' in request.GET:
         nickname = request.GET['nickname']
 
         found_summoners = Summoner.objects.filter(name__iexact=nickname)
 
+        region_list = ["na1", "br1", "kr", "ru", "oc1", "jp1", "eun1", "euw1", "tr1", "la1", "la2"]
+
         found_regions = []
         for summoner in found_summoners:
             found_regions.append(summoner.region)
             summoners.append(summoner)
 
-        # make a http request for each other region (na1, br1, kr and euw1)
-        if 'na1' not in found_regions:
-            response = requests.get(
-                'https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + nickname + '?api_key=' + api_key)
-            summoner = response.json()
-            if 'accountId' in summoner:
-                accountId = summoner["accountId"]
-                summonerId = summoner["id"]
-
-                name = summoner["name"]
-                profileIconId = summoner["profileIconId"]
-                summonerLevel = summoner["summonerLevel"]
-                new_summoner = Summoner.objects.create(region="na1", accountId=accountId, summonerId=summonerId,
-                                                       name=name, profileIconId=profileIconId,
-                                                       summonerLevel=summonerLevel, leagues_updated_at=datetime.now())
-                summoners.append(new_summoner)
-
-        if 'br1' not in found_regions:
-            response = requests.get(
-                'https://br1.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + nickname + '?api_key=' + api_key)
-            summoner = response.json()
-            if 'accountId' in summoner:
-                accountId = summoner["accountId"]
-                summonerId = summoner["id"]
-                name = summoner["name"]
-                profileIconId = summoner["profileIconId"]
-                summonerLevel = summoner["summonerLevel"]
-                revisionDate = summoner["revisionDate"]
-                new_summoner = Summoner.objects.create(region="br1", accountId=accountId, summonerId=summonerId,
-                                                       name=name, profileIconId=profileIconId,
-                                                       summonerLevel=summonerLevel, revisionDate=revisionDate)
-                summoners.append(new_summoner)
-
-        if 'kr' not in found_regions:
-            response = requests.get(
-                'https://kr.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + nickname + '?api_key=' + api_key)
-            summoner = response.json()
-            if 'accountId' in summoner:
-                accountId = summoner["accountId"]
-                summonerId = summoner["id"]
-                name = summoner["name"]
-                profileIconId = summoner["profileIconId"]
-                summonerLevel = summoner["summonerLevel"]
-                revisionDate = summoner["revisionDate"]
-                new_summoner = Summoner.objects.create(region="kr", accountId=accountId, summonerId=summonerId,
-                                                       name=name, profileIconId=profileIconId,
-                                                       summonerLevel=summonerLevel, revisionDate=revisionDate)
-                summoners.append(new_summoner)
-
-        if 'euw1' not in found_regions:
-            response = requests.get(
-                'https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + nickname + '?api_key=' + api_key)
-            summoner = response.json()
-            if 'accountId' in summoner:
-                accountId = summoner["accountId"]
-                summonerId = summoner["id"]
-                name = summoner["name"]
-                profileIconId = summoner["profileIconId"]
-                summonerLevel = summoner["summonerLevel"]
-                revisionDate = summoner["revisionDate"]
-                new_summoner = Summoner.objects.create(region="euw1", accountId=accountId, name=name,
-                                                       profileIconId=profileIconId, summonerLevel=summonerLevel,
-                                                       revisionDate=revisionDate, summonerId=summonerId)
-                summoners.append(new_summoner)
+        for region in region_list:
+            if region not in found_regions:
+                summoner = get_summoner(region, nickname)
+                summoners.append(summoner)
 
     return render(request, 'search.html', {"summoners": summoners})
 
 
 def summoner(request, region, nickname):
+    if not api_key_is_updated():
+        return redirect(expired_api_key)
+
     summoner = get_summoner(region, nickname)
 
-    # If summoner wasn' found, returns to the home page
-    # (later I will create a customized error)
+    # If no summoner was found, redirects to the home page
+    # (later I will create a customized 'no summoners found' page)
     if summoner == None:
         return redirect("home")
 
     summoner.leagues = get_leagues(summoner)
 
-    response = requests.get(
-        "https://" + region + ".api.riotgames.com/lol/match/v3/matchlists/by-account/" + str(
-            summoner.accountId) + "/recent?api_key=" + api_key)
-    jsonresponse = response.json()
-    recent_matches = []
+    recent_matches = get_recent_matches(summoner)
 
-    for match in jsonresponse["matches"]:
-        gameId = match["gameId"]
-        try:
-            summoner_match = Summoner_Match.objects.get(summoner_accountId=summoner.accountId, gameId=gameId)
-            recent_matches.append(summoner_match)
-        except:
-            lane = match["lane"]
-            championId = match["champion"]
-
-            championName = Champion.objects.get(championId=championId).name
-
-            timestamp = match["timestamp"]
-            role = match["role"]
-
-            participantId = 0
-            summoner_name = ""
-            win = False
-            kills = 0
-            deaths = 0
-            assists = 0
-
-            match_details = requests.get("https://" + region + ".api.riotgames.com/lol/match/v3/matches/" + str(
-                gameId) + "?api_key=" + api_key).json()
-            for participantIdentity in match_details["participantIdentities"]:
-                if participantIdentity["player"]["summonerName"].lower() == summoner.name.lower():
-                    participantId = participantIdentity["participantId"]
-                    summoner_name = participantIdentity["player"]["summonerName"]
-
-            # Save win/lose and KDA
-            for participant in match_details["participants"]:
-                if participantId == participant["participantId"]:
-                    win = participant["stats"]["win"]
-                    kills = participant["stats"]["kills"]
-                    deaths = participant["stats"]["deaths"]
-                    assists = participant["stats"]["assists"]
-
-            summoner_match = Summoner_Match.objects.create(summoner_accountId=summoner.accountId,
-                                                           summoner_name=summoner_name, gameId=gameId,
-                                                           participantId=participantId, championId=championId,
-                                                           championName=championName,
-                                                           timestamp=timestamp, win=win, role=role, lane=lane,
-                                                           kills=kills, deaths=deaths, assists=assists)
-            recent_matches.append(summoner_match)
-
-    # Check if user is following the summoner
-    following = False
-    if request.user.is_authenticated:
-        user = request.user
-        if Following.objects.filter(user=user, summoner=summoner).count() > 0:
-            following = True
+    is_following = user_is_following(request, summoner)
 
     return render(request, 'summoner.html',
-                  {"summoner": summoner, "recent_matches": recent_matches, "following": following})
+                  {"summoner": summoner, "recent_matches": recent_matches, "is_following": is_following})
 
 
 def champions(request):
-    # Getting the most recent version of the static data
-    response = requests.get("https://ddragon.leagueoflegends.com/api/versions.json").json()
-    latest_version = response[0]
+    latest_version = get_latest_static_data_version()
 
-    # Saving champion data to database
-    response = requests.get(
+    jsonresponse = requests.get(
         "http://ddragon.leagueoflegends.com/cdn/" + latest_version + "/data/en_US/champion.json").json()
-    if "data" in response:
 
-        for champion, value in response["data"].items():
+    # Saving champions data to database
+    if "data" in jsonresponse:
+
+        Champion.objects.all().delete()
+
+        for champion, value in jsonresponse["data"].items():
             print(value["name"] + ", " + value["title"])
             name = value["name"]
             championId = value["key"]
@@ -238,10 +131,11 @@ def follow(request, summoner_id):
 
 @login_required
 def following(request):
-
     user = request.user
     following_list = Following.objects.filter(user=user)
 
     return render(request, 'following.html', {"following_list": following_list})
 
 
+def expired_api_key(request):
+    return render(request, 'expired_api_key.html')
