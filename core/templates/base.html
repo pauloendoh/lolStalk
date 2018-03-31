@@ -57,7 +57,7 @@
                             <option value="br1">BR</option>
                         </select>
                         <input class="form-control" type="text" class="form-control" name="nickname"
-                               placeholder="Search summoner" {% if request.GET.nickname %}value="{{ request.GET.nickname }}" {% endif %}/>
+                               placeholder="Search summoner" {%if request.GET.nickname%}value="{{ request.GET.nickname }}" {% endif %}/>
 
                         <div class="input-group-append ">
 
@@ -79,12 +79,6 @@
                 </form>
             </li>-->
 
-            <!-- Following (summoners) list -->
-            {% if request.user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'following' %}">Following</a>
-            </li>
-            {% endif %}
 
         </ul>
 
@@ -95,8 +89,17 @@
                 <a class="nav-lnk dropdown-toggle no-underline text-primary" href="#" id="navbardrop"
                    data-toggle="dropdown">{{ request.user.username }}</a>
                 <div class="dropdown-menu dropdown-menu-right">
+
+                    <!-- Following (summoners) list -->
+                    {% if request.user.is_authenticated %}
+                    <a class="dropdown-item" href="{% url 'following' %}">Following</a>
+                    {% endif %}
+
+                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                 </div>
+
+
             </li>
         </ul>
         {% endif %}

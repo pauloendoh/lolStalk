@@ -36,7 +36,7 @@ def home(request):
         return render(request, 'signup.html', {'form': form})
 
     # If user is authenticated
-    # get their timeline/feed  
+    # get their timeline/feed
     timeline = get_timeline(request.user)
 
     return render(request, 'home.html', {"timeline": timeline})
