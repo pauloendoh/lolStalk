@@ -12,6 +12,7 @@ urlpatterns = [
     path('champions', views.champions, name='champions'),
     path('follow/<int:summoner_id>', views.follow, name="follow"),
     path('following', views.following, name='following'),
-    path('expired_api_key', views.expired_api_key, name="expired_api_key")
+    path('expired_api_key', views.expired_api_key, name="expired_api_key"),
+    path('update_matches', views.update_matches, name='update_matches'),
 
 ]

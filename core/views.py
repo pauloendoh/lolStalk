@@ -19,7 +19,6 @@ def home(request):
         if request.method == 'POST':
             form = SignUpForm(request.POST)
             if form.is_valid():
-
                 # Create a new user, then sign in automatically
                 form.save()
                 username = form.cleaned_data.get('username')
@@ -52,17 +51,18 @@ def search(request):
     if not api_key_is_updated():
         return redirect(expired_api_key)
 
-    summoners = []
     if 'nickname' and 'region' in request.GET:
         region = request.GET['region']
         nickname = request.GET['nickname']
 
+        # If a region was selected
+        # go directly to the summoner page
         if not region == '':
             return redirect('summoner/' + region + "/" + nickname)
 
+        summoners = []
+
         found_summoners = Summoner.objects.filter(name__iexact=nickname)
-
-
 
         region_list = ["na1", "br1", "kr", "ru", "oc1", "jp1", "eun1", "euw1", "tr1", "la1", "la2"]
 
@@ -146,3 +146,15 @@ def following(request):
 
 def expired_api_key(request):
     return render(request, 'expired_api_key.html')
+
+@login_required
+def update_matches(request):
+
+    user = request.user
+
+    following_list = Following.objects.filter(user=user)
+
+    for following in following_list:
+        get_recent_matches(following.summoner)
+
+    return redirect('home')

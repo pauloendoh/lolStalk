@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="30f73d60-2f4c-4687-9a7a-ef2f9b806b36" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/core/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
@@ -30,17 +31,17 @@
       <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/templates/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="182">
-              <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
+            <state relative-caret-position="392">
+              <caret line="27" column="14" lean-forward="true" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="14" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="signup.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/templates/signup.html">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="14" column="60" selection-start-line="14" selection-start-column="43" selection-end-line="14" selection-end-column="60" />
+            <state relative-caret-position="182">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
             </state>
           </provider>
         </entry>
@@ -75,7 +76,7 @@
       <file leaf-file-name="functions.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/functions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="347">
+            <state relative-caret-position="389">
               <caret line="116" column="26" selection-start-line="116" selection-start-column="12" selection-end-line="116" selection-end-column="26" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
@@ -87,8 +88,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="76" column="40" selection-start-line="76" selection-start-column="40" selection-end-line="76" selection-end-column="40" />
+            <state relative-caret-position="553">
+              <caret line="157" column="45" selection-start-line="157" selection-start-column="45" selection-end-line="157" selection-end-column="45" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -99,8 +100,8 @@
       <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/templates/base.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="332">
-              <caret line="53" column="54" selection-start-line="53" selection-start-column="54" selection-end-line="53" selection-end-column="54" />
+            <state relative-caret-position="122">
+              <caret line="40" column="42" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="42" />
             </state>
           </provider>
         </entry>
@@ -143,11 +144,11 @@
       <find>times</find>
       <find>hu</find>
       <find>timezone</find>
-      <find>home</find>
       <find>time</find>
       <find>datetime</find>
-      <find>Summoner_Match</find>
       <find>col-3</find>
+      <find>home</find>
+      <find>Summoner_Match</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -167,16 +168,16 @@
         <option value="$PROJECT_DIR$/core/static/js/search.js" />
         <option value="$PROJECT_DIR$/core/templates/search.html" />
         <option value="$PROJECT_DIR$/core/templates/following.html" />
-        <option value="$PROJECT_DIR$/core/urls.py" />
         <option value="$PROJECT_DIR$/core/templates/expired_api_key.html" />
         <option value="$PROJECT_DIR$/core/templates/summoner.html" />
-        <option value="$PROJECT_DIR$/core/templates/home.html" />
         <option value="$PROJECT_DIR$/core/templates/match_card.html" />
         <option value="$PROJECT_DIR$/lolstalk/settings.py" />
         <option value="$PROJECT_DIR$/core/functions.py" />
         <option value="$PROJECT_DIR$/core/templates/base.html" />
         <option value="$PROJECT_DIR$/core/static/styles/main.css" />
         <option value="$PROJECT_DIR$/core/models.py" />
+        <option value="$PROJECT_DIR$/core/urls.py" />
+        <option value="$PROJECT_DIR$/core/templates/home.html" />
         <option value="$PROJECT_DIR$/core/views.py" />
       </list>
     </option>
@@ -549,13 +550,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="14" column="72" selection-start-line="14" selection-start-column="72" selection-end-line="14" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/templates/expired_api_key.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="168">
@@ -598,37 +592,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="116" column="26" selection-start-line="116" selection-start-column="12" selection-end-line="116" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/templates/match_card.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="9" column="46" selection-start-line="9" selection-start-column="46" selection-end-line="9" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="53" column="54" selection-start-line="53" selection-start-column="54" selection-end-line="53" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/static/styles/main.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="70">
@@ -646,10 +609,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/core/templates/match_card.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="9" column="46" selection-start-line="9" selection-start-column="46" selection-end-line="9" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="40" column="42" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/templates/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="27" column="14" lean-forward="true" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="116" column="26" selection-start-line="116" selection-start-column="12" selection-end-line="116" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/core/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="76" column="40" selection-start-line="76" selection-start-column="40" selection-end-line="76" selection-end-column="40" />
+        <state relative-caret-position="553">
+          <caret line="157" column="45" selection-start-line="157" selection-start-column="45" selection-end-line="157" selection-end-column="45" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>

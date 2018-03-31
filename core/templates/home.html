@@ -2,15 +2,21 @@
 {% load staticfiles %}
 
 
-
 {% block title %}LoLStalk - Follow match histories of pro players and friends{% endblock %}
 
 {% block content %}
 
 <div class="container mt-3">
 
+    <!--Update timeline button-->
+    <div class="mt-1 mb-3">
+        <a href="{% url 'update_matches' %}">
+            <button class="btn btn-primary">Update matches</button>
+        </a>
+    </div>
+
     <!--Summoners match history-->
-    <div class=" mb-5">
+    <div class="mb-5">
         {% for match in timeline %}
         {% include "match_card.html" %}
         {% endfor %}
