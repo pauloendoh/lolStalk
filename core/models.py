@@ -14,6 +14,7 @@ class Summoner(models.Model):
 
 
 class Summoner_Match(models.Model):
+    summoner = models.ForeignKey(Summoner, on_delete=models.CASCADE)
     summoner_accountId = models.IntegerField()
     summoner_name = models.CharField(max_length=18)
     gameId = models.FloatField()

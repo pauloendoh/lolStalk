@@ -4,7 +4,7 @@ import requests
 
 from core.models import Following, Summoner, League, Summoner_Match, Champion
 
-api_key = "RGAPI-a272da88-cb56-4bdc-831f-98f4ee659b9c"
+api_key = "RGAPI-ac113798-ba92-4194-a9de-9e711dd94df6"
 
 
 def get_timeline(user):
@@ -183,6 +183,7 @@ def get_latest_static_data_version():
     response = requests.get("https://ddragon.leagueoflegends.com/api/versions.json").json()
     return response[0]
 
+
 def get_timeline(user):
     # Timeline is a list of matches
     # of the summoners that the user follows.
@@ -198,7 +199,5 @@ def get_timeline(user):
         for summoner_match in summoner_match_list:
             timeline.append(summoner_match)
         timeline.sort(key=lambda object1: object1.timestamp, reverse=True)
-
-
 
     return timeline
