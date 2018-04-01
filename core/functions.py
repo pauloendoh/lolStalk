@@ -4,7 +4,7 @@ import requests
 
 from core.models import Following, Summoner, League, Summoner_Match, Champion
 
-api_key = "RGAPI-ac113798-ba92-4194-a9de-9e711dd94df6"
+api_key = "RGAPI-8d37ff73-f42d-4457-8a55-bf8ddf3a8ac1"
 
 
 def get_timeline(user):

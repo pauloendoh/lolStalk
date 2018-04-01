@@ -150,6 +150,10 @@ def expired_api_key(request):
 @login_required
 def update_matches(request):
 
+    if not api_key_is_updated():
+        return redirect(expired_api_key)
+
+
     user = request.user
 
     following_list = Following.objects.filter(user=user)

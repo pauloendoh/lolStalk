@@ -1,17 +1,17 @@
-{% load humanize %}
-
 <div class="card mb-2
-{% ifequal match.win False %}
+{% ifequal match.win 0 %}
 bg-danger
 {% else %}
-bg-primary
+bg-success
 {% endifequal %}">
+
     <div class="card-body">
         <h5 class="card-title"><b><a class="text-dark no-underline"
-                href="{% url 'summoner' 'br1' match.summoner_name %}">{{match.summoner_name}}</a></b>
+                                     href="{% url 'summoner' 'br1' match.summoner_name %}">{{match.summoner_name}}</a></b>
         </h5>
         <p class="card-text">Champion: {{ match.championName }}</p>
         <p class="card-text">KDA: {{match.kills}} / {{match.deaths}} / {{ match.assists }} </p>
         <p class="card-text">{{match.timestamp|naturaltime|capfirst}} </p>
     </div>
+
 </div>
